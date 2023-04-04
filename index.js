@@ -52,7 +52,7 @@ app.get("/reminder/:id", reminderController.listOne);
 
 app.get("/reminder/:id/edit", reminderController.edit);
 
-app.post("/reminder/", reminderController.create);
+app.post("/reminder/new", reminderController.create);
 
 // Implement this yourself
 app.post("/reminder/update/:id", reminderController.update);
