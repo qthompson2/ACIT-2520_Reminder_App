@@ -5,6 +5,7 @@ const path = require("path");
 const ejsLayouts = require("express-ejs-layouts");
 const reminderController = require("./controller/reminder_controller");
 const authController = require("./controller/userController");
+const { ensureAuthenticated } = require('./middleware/checkAuth.js')
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
@@ -23,6 +24,16 @@ app.use(
 const passport = require("./middleware/passport");
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  if (req.user) {
+    res.locals.loggedIn = true;
+  } else {
+    res.locals.loggedIn = false;
+  }
+  next();
+})
+
 app.use(express.urlencoded({ extended: false }));
 
 app.use(ejsLayouts);
@@ -44,21 +55,21 @@ app.post(
 
 // Routes start here
 
-app.get("/reminders", reminderController.list);
+app.get("/reminders", ensureAuthenticated, reminderController.list);
 
-app.get("/reminder/new", reminderController.new);
+app.get("/reminder/new", ensureAuthenticated, reminderController.new);
 
-app.get("/reminder/:id", reminderController.listOne);
+app.get("/reminder/:id", ensureAuthenticated, reminderController.listOne);
 
-app.get("/reminder/:id/edit", reminderController.edit);
+app.get("/reminder/:id/edit", ensureAuthenticated, reminderController.edit);
 
-app.post("/reminder/new", reminderController.create);
-
-// Implement this yourself
-app.post("/reminder/update/:id", reminderController.update);
+app.post("/reminder/new", ensureAuthenticated, reminderController.create);
 
 // Implement this yourself
-app.post("/reminder/delete/:id", reminderController.delete);
+app.post("/reminder/update/:id", ensureAuthenticated, reminderController.update);
+
+// Implement this yourself
+app.post("/reminder/delete/:id", ensureAuthenticated, reminderController.delete);
 
 app.get('/logout', function(req, res, next){
   req.logout(function(err) {

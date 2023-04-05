@@ -5,9 +5,11 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-item nav-link" href="/reminders">Reminder List</a>
-      <a class="nav-item nav-link" href="/reminder/new">Create</a>
-      <a class="nav-item nav-link" href="/logout">Logout</a>
+      <% if(loggedIn) { %>
+        <a class="nav-item nav-link" href="/reminders">Reminder List</a>
+        <a class="nav-item nav-link" href="/reminder/new">Create</a>
+        <a class="nav-item nav-link" href="/logout">Logout</a>
+      <% } %>
     </div>
   </div>
 </nav>
